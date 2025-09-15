@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { ArrowRight, ChevronRight, Menu, X, Home as IconHome, User as IconUser, MessageSquare as IconMessage } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { LiquidButton, Button } from '@/components/ui/button'
 import { AnimatedGroup } from '@/components/ui/animated-group'
 import { cn } from '@/lib/utils'
 import { Logos } from "./logo"
@@ -87,33 +87,33 @@ export function HeroSection() {
                             <div className="text-center sm:mx-auto lg:mr-auto lg:mt-0">
                                 <AnimatedGroup variants={fadeUpVariants}>
                                     <Link
-                                        href="#link"
-                                        className="hover:bg-background dark:hover:border-t-border bg-muted group mx-auto flex w-fit items-center gap-4 rounded-full border p-1 pl-4 shadow-md shadow-black/5 transition-all duration-300 dark:border-t-white/5 dark:shadow-zinc-950">
-                                        <span className="text-foreground text-sm">Introducing Support for AI Agents</span>
-                                        <span className="dark:border-background block h-4 w-0.5 border-l bg-white dark:bg-zinc-700"></span>
+                                        href="/"
+                                        className="hover:bg-white/10 bg-white/5 group mx-auto flex w-fit items-center gap-4 rounded-full border border-white/20 p-1 pl-4 shadow-md shadow-black/5 transition-all duration-300">
+                                        <span className="text-white text-sm">Introducing Support for AI Agents</span>
+                                        <span className="block h-4 w-0.5 border-l border-white/30 bg-white/20"></span>
 
-                                        <div className="bg-background group-hover:bg-muted size-6 overflow-hidden rounded-full duration-500">
+                                        <div className="bg-white/10 group-hover:bg-white/20 size-6 overflow-hidden rounded-full duration-500">
                                             <div className="flex w-12 -translate-x-1/2 duration-500 ease-in-out group-hover:translate-x-0">
                                                 <span className="flex size-6">
-                                                    <ArrowRight className="m-auto size-3" />
+                                                    <ArrowRight className="m-auto size-3 text-white" />
                                                 </span>
                                                 <span className="flex size-6">
-                                                    <ArrowRight className="m-auto size-3" />
+                                                    <ArrowRight className="m-auto size-3 text-white" />
                                                 </span>
                                             </div>
                                         </div>
                                     </Link>
                         
                                     <h1 className="mt-8 max-w-4xl mx-auto text-balance text-6xl md:text-7xl lg:mt-16 xl:text-[5.25rem] font-extrabold tracking-tight  ">
-                                       <span className="text-black">TRADE. LEARN. EVOLVE.</span>
+                                       <span className="text-white">TRADE. LEARN. EVOLVE.</span>
                                     <br />
-                                      <span className="text-black italic text-4xl md:text-5xl lg:text-6xl">
+                                      <span className="text-white italic text-4xl md:text-5xl lg:text-6xl">
                                          Autonomously on Algorand
                                        </span>
                                     </h1>
 
-                                    <p className="text-black/70 text-lg md:text-2xl mb-12 max-w-2xl leading-relaxed font-light center mx-auto pt-10">
-                                      Your intelligent portfolio partner—analyzing data, predicting moves, and trading instantly on Algorand’s fast, low-cost network.
+                                    <p className="text-white/80 text-lg md:text-2xl mb-12 max-w-2xl leading-relaxed font-light center mx-auto pt-10">
+                                      Your intelligent portfolio partner—analyzing data, predicting moves, and trading instantly on Algorand's fast, low-cost network.
                                       </p>
                                     
                                 </AnimatedGroup>
@@ -124,14 +124,14 @@ export function HeroSection() {
                                     <div
                                         key={1}
                                         className="bg-foreground/10 rounded-[14px] border p-0.5">
-                                        <Button
+                                        <LiquidButton
                                             asChild
                                             size="lg"
                                             className="rounded-xl px-5 text-base">
-                                            <Link href="#link">
-                                                <span className="text-nowrap">Connect Wallet</span>
+                                            <Link href="/">
+                                                <span className="text-white">Connect Wallet</span>
                                             </Link>
-                                        </Button>
+                                        </LiquidButton>
                                     </div>
                                     <Button
                                         key={2}
@@ -199,17 +199,17 @@ const navItems = [
     {
       name: "Home",
       link: "/",
-      icon: <IconHome className="h-4 w-4 text-neutral-500 dark:text-white" />,
+      icon: <IconHome className="h-4 w-4 text-white/80" />,
     },
     {
       name: "About",
       link: "/about",
-      icon: <IconUser className="h-4 w-4 text-neutral-500 dark:text-white" />,
+      icon: <IconUser className="h-4 w-4 text-white/80" />,
     },
     {
       name: "Contact",
       link: "/contact",
-      icon: <IconMessage className="h-4 w-4 text-neutral-500 dark:text-white" />,
+      icon: <IconMessage className="h-4 w-4 text-white/80" />,
     },
   ]
 
@@ -235,14 +235,14 @@ const HeroHeader = () => {
         <header>
             <nav
                 data-state={menuState && 'active'}
-                className="fixed z-20 w-full px-2 group">
+                className="fixed z-20 w-full px-2 group text-white">
                 <div className={cn('mx-auto mt-2 max-w-6xl px-6 transition-all duration-300 lg:px-12', isScrolled && 'bg-background/50 max-w-4xl rounded-2xl border backdrop-blur-lg lg:px-5')}>
                     <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
                         <div className="flex w-full justify-between lg:w-auto">
                             <Link
                                 href="/"
                                 aria-label="home"
-                                className="flex items-center space-x-2">
+                                className="flex items-center space-x-2 text-white">
                                 <Logo />
                             </Link>
 
@@ -261,7 +261,7 @@ const HeroHeader = () => {
                                     <li key={index}>
                                         <Link
                                             href={item.href}
-                                            className="text-muted-foreground hover:text-accent-foreground block duration-150">
+                                            className="text-white/80 hover:text-white block duration-150">
                                             <span>{item.name}</span>
                                         </Link>
                                     </li>
@@ -276,7 +276,7 @@ const HeroHeader = () => {
                                         <li key={index}>
                                             <Link
                                                 href={item.href}
-                                                className="text-muted-foreground hover:text-accent-foreground block duration-150">
+                                                className="text-white/80 hover:text-white block duration-150">
                                                 <span>{item.name}</span>
                                             </Link>
                                         </li>
@@ -285,22 +285,22 @@ const HeroHeader = () => {
                             </div>
                             <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
                                 
-                                <Button
+                                <LiquidButton
                                     asChild
                                     size="sm"
                                     className={cn(isScrolled && 'lg:hidden')}>
-                                    <Link href="#">
-                                        <span>Connect Wallet</span>
+                                    <Link href="/">
+                                        <span className="text-white">Connect Wallet</span>
                                     </Link>
-                                </Button>
-                                <Button
+                                </LiquidButton>
+                                <LiquidButton
                                     asChild
                                     size="sm"
                                     className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
-                                    <Link href="#">
-                                        <span>Connect wallet</span>
+                                    <Link href="/">
+                                        <span className="text-black">Connect wallet</span>
                                     </Link>
-                                </Button>
+                                </LiquidButton>
                             </div>
                         </div>
                     </div>
