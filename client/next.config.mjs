@@ -1,4 +1,17 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
 
-export default nextConfig;
+import { webpackFallback } from '@txnlab/use-wallet'
+
+const nextConfig = {
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        ...webpackFallback
+      }
+    }
+    return config
+  }
+}
+
+export default nextConfig
