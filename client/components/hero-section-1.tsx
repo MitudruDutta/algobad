@@ -2,12 +2,22 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { ArrowRight, ChevronRight, Menu, X, Home as IconHome, User as IconUser, MessageSquare as IconMessage } from 'lucide-react'
-import { LiquidButton, Button } from '@/components/ui/button'
+import { ArrowRight, ChevronRight, Menu, X, Home as IconHome, User as IconUser, MessageSquare as IconMessage, ChevronDown, LogOut, Copy, ExternalLink } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { AnimatedGroup } from '@/components/ui/animated-group'
 import { cn } from '@/lib/utils'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Logos } from "./logo"
 import { motion, useScroll, useTransform } from "framer-motion"
+import { useWallet } from "@/components/WalletProvider"
+import { useRouter } from "next/navigation"
 
 
 const fadeUpVariants = {
@@ -35,6 +45,33 @@ const fadeUpVariants = {
 } as const;
 
 export function HeroSection() {
+    const { wallets, activeAccount } = useWallet()
+    const router = useRouter()
+
+    const handleWalletConnect = async () => {
+        try {
+            if (wallets && wallets.length > 0) {
+                await wallets[0].connect()
+                // Show wallet address briefly, then redirect to dashboard
+                setTimeout(() => {
+                    router.push('/dashboard')
+                }, 2000)
+            }
+        } catch (error) {
+            console.error('Failed to connect wallet:', error)
+        }
+    }
+
+    const handleWalletDisconnect = async () => {
+        try {
+            if (wallets && wallets.length > 0) {
+                await wallets[0].disconnect()
+            }
+        } catch (error) {
+            console.error('Failed to disconnect wallet:', error)
+        }
+    }
+
     return (
         <>
             <HeroHeader />
@@ -121,28 +158,23 @@ export function HeroSection() {
                                 <AnimatedGroup
                                     variants={fadeUpVariants}
                                     className="mt-12 flex flex-col items-center justify-center gap-2 md:flex-row">
-                                    <div
-                                        key={1}
-                                        className="bg-foreground/10 rounded-[14px] border p-0.5">
-                                        <LiquidButton
-                                            asChild
-                                            size="lg"
-                                            className="rounded-xl px-5 text-base">
-                                            <Link href="/">
-                                                <span className="text-white">Connect Wallet</span>
-                                            </Link>
-                                        </LiquidButton>
-                                    </div>
-                                    <Button
-                                        key={2}
-                                        asChild
-                                        size="lg"
-                                        variant="ghost"
-                                        className="h-10.5 rounded-xl px-5">
-                                        <Link href="#link">
-                                            <span className="text-nowrap">Request a demo</span>
-                                        </Link>
-                                    </Button>
+                                    {activeAccount ? (
+                                        <>
+                                            <Button
+                                                key={2}
+                                                onClick={() => router.push('/dashboard')}
+                                                size="lg"
+                                                variant="ghost"
+                                                className="h-10.5 rounded-xl px-5">
+                                                <span className="text-nowrap">Go to Dashboard</span>
+                                            </Button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            
+                                            
+                                        </>
+                                    )}
                                 </AnimatedGroup>
                             </div>
                         </div>
@@ -223,6 +255,39 @@ const menuItems = navItems.map(item => ({
 const HeroHeader = () => {
     const [menuState, setMenuState] = React.useState(false)
     const [isScrolled, setIsScrolled] = React.useState(false)
+    const { wallets, activeAccount } = useWallet()
+    const router = useRouter()
+
+    const handleWalletConnect = async () => {
+        try {
+            if (wallets && wallets.length > 0) {
+                await wallets[0].connect()
+            }
+        } catch (error) {
+            console.error('Failed to connect wallet:', error)
+        }
+    }
+
+    const handleWalletDisconnect = async () => {
+        try {
+            if (wallets && wallets.length > 0) {
+                await wallets[0].disconnect()
+            }
+        } catch (error) {
+            console.error('Failed to disconnect wallet:', error)
+        }
+    }
+
+    const handleCopyAddress = async () => {
+        try {
+            if (activeAccount?.address) {
+                await navigator.clipboard.writeText(activeAccount.address)
+                // You could add a toast notification here
+            }
+        } catch (error) {
+            console.error('Failed to copy address:', error)
+        }
+    }
 
     React.useEffect(() => {
         const handleScroll = () => {
@@ -284,23 +349,58 @@ const HeroHeader = () => {
                                 </ul>
                             </div>
                             <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                                
-                                <LiquidButton
-                                    asChild
-                                    size="sm"
-                                    className={cn(isScrolled && 'lg:hidden')}>
-                                    <Link href="/">
-                                        <span className="text-white">Connect Wallet</span>
-                                    </Link>
-                                </LiquidButton>
-                                <LiquidButton
-                                    asChild
-                                    size="sm"
-                                    className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
-                                    <Link href="/">
-                                        <span className="text-black">Connect wallet</span>
-                                    </Link>
-                                </LiquidButton>
+                                {activeAccount ? (
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 rounded-lg px-3 py-2 hover:bg-green-500/20 transition-colors cursor-pointer">
+                                                <div className="flex flex-col">
+                                                    <p className="text-green-400 text-xs font-medium">Connected</p>
+                                                    <p className="text-white/80 text-xs">
+                                                        {activeAccount.address.slice(0, 6)}...{activeAccount.address.slice(-4)}
+                                                    </p>
+                                                </div>
+                                                <ChevronDown className="h-4 w-4 text-white/60" />
+                                            </div>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent 
+                                            align="end" 
+                                            className="w-56 bg-background/95 backdrop-blur-sm border-black/20">
+                                            <DropdownMenuLabel className="text-black/80">
+                                                Wallet Actions
+                                            </DropdownMenuLabel>
+                                            <DropdownMenuSeparator className="bg-black/20" />
+                                            <DropdownMenuItem 
+                                                onClick={handleCopyAddress}
+                                                className="text-black/90 hover:text-black hover:bg-black/10 cursor-pointer">
+                                                <Copy className="mr-2 h-4 w-4" />
+                                                Copy Address
+                                            </DropdownMenuItem>
+                                            
+                                            <DropdownMenuSeparator className="bg-black/20" />
+                                            <DropdownMenuItem 
+                                                onClick={handleWalletDisconnect}
+                                                className="text-red-400 hover:text-red-300 hover:bg-red-500/10 cursor-pointer">
+                                                <LogOut className="mr-2 h-4 w-4" />
+                                                Disconnect Wallet
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                ) : (
+                                    <>
+                                        <Button
+                                            onClick={handleWalletConnect}
+                                            size="sm"
+                                            className={cn(isScrolled && 'lg:hidden')}>
+                                            <span className="text-white">Connect Wallet</span>
+                                        </Button>
+                                        <Button
+                                            onClick={handleWalletConnect}
+                                            size="sm"
+                                            className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
+                                            <span className="text-white">Connect wallet</span>
+                                        </Button>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>
